@@ -1,7 +1,10 @@
 #!/bin/bash
 ## Script to auto-populate a chroot folder for SSH users with programs of choice
+if [ "$EUID" -ne 0 ]
+	then echo "Please run as root"
+	exit 1
+fi
 
-### START OF USER EDITABLE VARIABLES ###
 chrootdir=""
 if [ -z "$1" ]; then
 	echo "No chroot path given, exiting for your own safety"
@@ -9,6 +12,8 @@ if [ -z "$1" ]; then
 else
 	chrootdir="$( readlink -f ${1} )"
 fi
+
+### START OF USER EDITABLE VARIABLES ###
 
 ## Binaries to copy into the chroot, auto-copying required libraries as well.
 programs=(
@@ -70,7 +75,7 @@ dirlist=(
 )
 
 ## Generate binaries dependencies and folder structure list
-	filelist+=$(ldd ${programs[*]} | grep -o -e '\ \/.* ' | sed -e 's/\ //g' | sort | uniq )
+	filelist+=$(ldd ${programs[*]} | grep -o -e '\/.* ' | sed -e 's/\ //g' | sort | uniq )
 	filelist+=(
 	"${programs[@]}"
 	"${static_files[@]}"
