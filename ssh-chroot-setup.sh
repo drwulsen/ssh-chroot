@@ -98,6 +98,6 @@ for i in "${devnodes[@]}"; do
 	mode="$(echo "$i" | cut -d ',' -f 2)"
 	rm --force "${chrootdir}/dev/${device}"
 	checkfail "$?" "rm --force ${chrootdir}/dev/${device}"
-	sudo mknod --mode 666 "${chrootdir}/dev/${device}" ${mode}
+	mknod --mode 666 "${chrootdir}/dev/${device}" ${mode}
 	checkfail "$?" "mknod --mode 666 ${chrootdir}/dev/${device} ${mode}"
 done
